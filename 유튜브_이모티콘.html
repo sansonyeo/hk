@@ -254,6 +254,24 @@
     font-size:12px;
     color:#7a7a7a;
   }
+  .chk{
+    flex:none;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:12px;
+    color:var(--muted);
+    cursor:pointer;
+    user-select:none;
+  }
+  .chk:hover{color:var(--text)}
+  .chk input{
+    width:14px;
+    height:14px;
+    margin:0;
+    accent-color:#3ea6ff;
+    cursor:pointer;
+  }
   .fname{
     flex:none;
     width:150px;
@@ -372,6 +390,9 @@
   <div class="tray" id="tray">
     <div class="buf" id="buf"></div>
     <span class="n" id="cnt"></span>
+    <label class="chk" title="체크하면 클릭할 때마다 클립보드에 이어 붙입니다. 꺼두면 누른 것 하나만 복사합니다.">
+      <input type="checkbox" id="stack"><span>쌓기</span>
+    </label>
     <input id="fname" class="fname" type="text" placeholder="저장 이름" autocomplete="off" spellcheck="false">
     <button id="save" title="이 이름으로 목록에 저장하고 txt 파일도 내려받기">저장</button>
     <button id="savelist" title="저장한 목록 보기">목록</button>
@@ -466,6 +487,7 @@ const qEl     = document.getElementById('q');
 const trayEl  = document.getElementById('tray');
 const bufEl   = document.getElementById('buf');
 const cntEl   = document.getElementById('cnt');
+const stackEl = document.getElementById('stack');
 const fnameEl = document.getElementById('fname');
 const saveEl  = document.getElementById('save');
 const listBtn = document.getElementById('savelist');
@@ -665,6 +687,8 @@ function syncTray(){
 listEl.addEventListener('click', e => {
   const cell = e.target.closest('.cell');
   if (!cell) return;
+  // [쌓기] 꺼짐(기본) → 방금 누른 것 하나만, 켜짐 → 뒤에 이어 붙이기
+  if (!stackEl.checked) buf.length = 0;
   buf.push(cell.dataset.copy);
   writeClipboard(syncTray());
 });
